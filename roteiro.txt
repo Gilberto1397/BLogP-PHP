@@ -1,0 +1,26 @@
+Criar tela de posts e login - REVISAR
+
+Criar back de usuário => FEITA APÓS REVISAR A PARTE DE API
+    Criar a rota, entidade e repository e tabela
+    Primeiro rota
+    Entidade
+    criar tabela e testar interação com banco
+    criar repository
+
+Criar back de posts - PRONTO
+    Rota, entidade e repository e tabela
+    Rota
+    Entidade
+    tabela e interação com banco
+    Criar repository (CRUD inteiro)
+
+Mais a frente, tela de criação de usuário
+
+Tentar salvar o usuário logado através do checkbox
+
+
+
+>>>Como estamos acessando apenas a pasta public, para chegar em nossos assets temos que navegar como se as views stivesse dentro da public também, já que todos os arquivos acabam sendo chamados pra dentro da public no momento da request
+
+
+>>>>Tentar usar post para o delete
