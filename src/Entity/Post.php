@@ -7,6 +7,9 @@ class Post
     protected string $title;
     protected string $content;
     protected int $id;
+    private ?string $imagePath = null;
+
+
 
     public function __construct(string $title, string $content)
     {
@@ -60,6 +63,22 @@ class Post
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param string|null $imagePath
+     */
+    public function setImagePath(?string $imagePath): void
+    {
+        $this->imagePath = $imagePath;
     }
 
 

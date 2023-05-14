@@ -14,12 +14,7 @@ class PostListController implements Controller
     public function processRequest(): void
     {
        $posts = $this->postRepository->all();
-       $message = null;
 
-       if (!empty($_SESSION['mensagem'])) {
-           $message = $_SESSION['mensagem'];
-           unset($_SESSION['mensagem']);
-       }
         require_once __DIR__ . '/../../views/posts.php';
     }
 }

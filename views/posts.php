@@ -15,6 +15,9 @@ foreach ($posts as $post): ?>
         <a href="/editar-post?id=<?= $post->getId() ?>" class="btn btn-secondary">Editar</a>
         <a href="/deletar-post?id=<?= $post->getId() ?>" class="btn btn-danger">Deletar</a>
     </div>
+    <div style="width: 30%;">
+        <img src="<?='img/uploads/' . $post->getImagePath() ?>" class="img-thumbnail" alt="" style="height: 300px">
+    </div>
 <?php endforeach ?>
 
 <?php

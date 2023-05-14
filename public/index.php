@@ -16,6 +16,21 @@ $httpMethod = $_SERVER['REQUEST_METHOD'];
 
 $httpRoute = "$httpMethod|$pathInfo";
 
+$isLoginRoute = $pathInfo === '/login';
+
+if (!array_key_exists('logado', $_SESSION) && !$isLoginRoute) {
+    $_SESSION['mensagem'] = 'TEM QUE TA LOGADO KRAI';
+    header('Location: /login');
+    return;
+}
+
+if (isset($_SESSION['logado'])) {
+    $originalInfo = $_SESSION['logado'];
+    unset($_SESSION['logado']);
+    session_regenerate_id();
+    $_SESSION['logado'] = $originalInfo;
+}
+
 if (array_key_exists($httpRoute, $routes)) {
     $controllerClass = $routes[$httpRoute];
     $controller = new $controllerClass($postRepository);

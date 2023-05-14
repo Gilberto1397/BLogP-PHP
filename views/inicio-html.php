@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+<?php
+
+$message = null;
+
+if (!empty($_SESSION['mensagem'])) {
+    $message = $_SESSION['mensagem'];
+    unset($_SESSION['mensagem']);
+}
+
+?><!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -20,6 +29,8 @@
             <div class="navbar-nav">
                 <a class="nav-link text-light" href="/">Home</a>
                 <a class="nav-link text-light" href="/novo-post">Novo Post</a>
+                <a class="nav-link text-light" href="/login">Entrar</a>
+                <a class="nav-link text-light" href="/logout">Sair</a>
             </div>
         </div>
     </div>

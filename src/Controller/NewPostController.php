@@ -30,6 +30,21 @@ class NewPostController implements Controller
 
         $post = new Post($title, $content);
 
+        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($_FILES['image']['tmp_name']);
+
+            if (str_starts_with($mimeType, 'image/')) {
+                $safeFileName = uniqid('upload_', true) . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME);
+                move_uploaded_file(
+                    $_FILES['image']['tmp_name'],
+                    __DIR__ . '/../../public/img/uploads/' . $safeFileName
+                );
+                $post->setImagePath($safeFileName);
+            }
+
+        }
+
         $success = $this->postRepository->add($post);
 
         if ($success === false) {
