@@ -2,9 +2,11 @@
 
 use ProjetoBlog\Controller\DeletePostController;
 use ProjetoBlog\Controller\EditPostController;
+use ProjetoBlog\Controller\JsonPostListController;
 use ProjetoBlog\Controller\LoginController;
 use ProjetoBlog\Controller\LoginFormController;
 use ProjetoBlog\Controller\LogoutController;
+use ProjetoBlog\Controller\NewJsonPostController;
 use ProjetoBlog\Controller\NewPostController;
 use ProjetoBlog\Controller\PostFormController;
 use ProjetoBlog\Controller\PostListController;
@@ -19,4 +21,6 @@ return [
     'GET|/login' => LoginFormController::class,
     'POST|/login' => LoginController::class,
     'GET|/logout' => LogoutController::class,
+    'GET|/posts-json' => JsonPostListController::class,
+    'POST|/posts' => NewJsonPostController::class,
 ];

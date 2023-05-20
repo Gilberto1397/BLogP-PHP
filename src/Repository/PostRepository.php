@@ -65,7 +65,7 @@ class PostRepository
     {
         $postList = $this->pdo->query('select * from posts;')->fetchAll(PDO::FETCH_ASSOC);
         return array_map(
-            $this->hydratePost(...),
+            [static::class, 'hydratePost'],
             $postList
         );
     }
