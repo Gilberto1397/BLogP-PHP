@@ -10,6 +10,8 @@ class LoginFormController implements Controller
             header('Location: /');
             return;
         }
+        $email = $_SESSION['usuario'] ?? null;
+
         require_once __DIR__ . '/../../views/form-login.php';
     }
 }

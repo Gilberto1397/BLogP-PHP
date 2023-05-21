@@ -34,7 +34,7 @@ class NewPostController implements Controller
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->file($_FILES['image']['tmp_name']);
 
-            if (str_starts_with($mimeType, 'image/')) {
+            if (stristr($mimeType, 'image/')) {
                 $safeFileName = uniqid('upload_', true) . '_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME);
                 move_uploaded_file(
                     $_FILES['image']['tmp_name'],

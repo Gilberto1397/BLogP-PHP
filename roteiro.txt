@@ -2,10 +2,10 @@ Criar tela de posts e login - REVISAR
 
 Criar back de usuário => FEITA APÓS REVISAR A PARTE DE API
     Criar a rota, entidade e repository e tabela
-    Primeiro rota
-    Entidade
-    criar tabela e testar interação com banco
-    criar repository
+    Primeiro rota - ok
+    Entidade - ok
+    criar tabela e testar interação com banco - ok
+    criar repository - ok
 
 Criar back de posts - PRONTO
     Rota, entidade e repository e tabela
@@ -14,22 +14,23 @@ Criar back de posts - PRONTO
     tabela e interação com banco
     Criar repository (CRUD inteiro)
 
-Mais a frente, tela de criação de usuário
+Mais a frente, tela de criação de usuário - OK
 
-Tentar salvar o usuário logado através do checkbox
+Tentar salvar o usuário(email) logado através do checkbox para prencher automaticamente - OK
 
-tirar o navbar na tela de login
+REVISAR QUANDO OS BOTÕES DEVEM APARECER - OK
 
 DESAFIO: BOTÃO NOS VÍDEOS PARA REMOVER A CAPA E ter uma capa padrão
 
 DESAFIO: EXTRAIR O CÓDIGO REPETIDO DE UPLOAD DE ARQUIVOS EM UMA CLASSE COM ESSA FINALIDADE
 
-apagar a foto do post ao editar e trocar a foto ou excluir o post
+apagar a foto do post ao editar e trocar a foto ou excluir o post - ok
 
 TODO: DESAFIO - SALVAR O NOME DO ARQUIVO DE UPLOAD COMO UM SLUG
 
 
->>>Como estamos acessando apenas a pasta public, para chegar em nossos assets temos que navegar como se as views estivesse dentro da public também, já que todos os arquivos acabam sendo chamados pra dentro da public no momento da request
+
+>>>Como estamos acessando apenas a pasta public, para chegar em nossos assets temos que navegar como se as views estivessem dentro da public também, já que todos os arquivos acabam sendo chamados pra dentro da public no momento da request
 
 
 >>>>Tentar usar post para o delete

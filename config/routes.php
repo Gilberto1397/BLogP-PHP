@@ -8,8 +8,10 @@ use ProjetoBlog\Controller\LoginFormController;
 use ProjetoBlog\Controller\LogoutController;
 use ProjetoBlog\Controller\NewJsonPostController;
 use ProjetoBlog\Controller\NewPostController;
+use ProjetoBlog\Controller\NewUserController;
 use ProjetoBlog\Controller\PostFormController;
 use ProjetoBlog\Controller\PostListController;
+use ProjetoBlog\Controller\UserFormController;
 
 return [
     'GET|/' => PostListController::class,
@@ -23,4 +25,6 @@ return [
     'GET|/logout' => LogoutController::class,
     'GET|/posts-json' => JsonPostListController::class,
     'POST|/posts' => NewJsonPostController::class,
+    'GET|/novo-usuario' => UserFormController::class,
+    'POST|/novo-usuario' => NewUserController::class
 ];

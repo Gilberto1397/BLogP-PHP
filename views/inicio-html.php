@@ -27,10 +27,11 @@ if (!empty($_SESSION['mensagem'])) {
     <div class="container-fluid">
         <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link text-light" href="/">Home</a>
-                <a class="nav-link text-light" href="/novo-post">Novo Post</a>
-                <a class="nav-link text-light" href="/login">Entrar</a>
-                <a class="nav-link text-light" href="/logout">Sair</a>
+                <a id="home" class="nav-link text-light" href="/">Home</a>
+                <a id="novoPost" class="nav-link text-light" href="/novo-post">Novo Post</a>
+                <a id="entrar" class="nav-link text-light" href="/login">Entrar</a>
+                <a id="sair" class="nav-link text-light" href="/logout">Sair</a>
+                <a id="criarUsuario" class="nav-link text-light" href="/novo-usuario">Criar User</a>
             </div>
         </div>
     </div>
@@ -39,3 +40,6 @@ if (!empty($_SESSION['mensagem'])) {
 <div class="message">
     <h3><?= $message ?? '' ?></h3>
 </div>
+
+<input id="logado" type="hidden" binarie value="<?= $_SESSION['logado'] ?? null ?>">
+

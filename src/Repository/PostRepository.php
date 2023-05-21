@@ -54,6 +54,13 @@ class PostRepository
 
     public function remove(int $id):bool
     {
+        $post = $this->find($id);
+        $postImage = $post->getImagePath();
+        if ($postImage !== null) {
+            $deleteImage = "img/uploads/" . $postImage;
+            unlink($deleteImage);
+        }
+
         $sql = 'delete from posts where id = :id;';
         $statement = $this->pdo->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
