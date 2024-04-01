@@ -14,35 +14,57 @@ class UserRepository
         $this->connection = $connection;
     }
 
+    /**
+     * @param  User $user
+     * @return bool
+     * @throws \PDOException
+     */
     public function add(User $user): bool
     {
-        $sql = 'insert into users (email, password) values (:email, :password)';
-        $statement = $this->connection->prepare($sql);
-        $statement->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
-        $statement->bindValue(':password', $user->getPassword(), PDO::PARAM_STR);
+        try {
+            $sql = 'insert into users (email, password) values (:email, :password)';
+            $statement = $this->connection->prepare($sql);
+            $statement->bindValue(':email', $user->getEmail());
+            $statement->bindValue(':password', $user->getPassword());
 
-        $result = $statement->execute();
-        $id = $this->connection->lastInsertId();
+            $result = $statement->execute();
+            $id = $this->connection->lastInsertId();
 
-        $user->setId((int)$id);
+            $user->setId((int)$id);
+        } catch (\PDOException $exception) {
+            $_SESSION['mensagem'] = 'Falha ao salvar novo usuário no banco de dados.';
+            header('Location: /novo-usuario');
+        }
         return $result;
     }
 
     /**
-     * @param string $email
-     * @return false|User
+     * @param  string  $email
+     * @return User
+     * @throws \PDOException | \DomainException
      */
     public function find(string $email)
     {
-        $statement = $this->connection->prepare('select * from users where email = :email');
-        $statement->bindValue(':email', $email, PDO::PARAM_STR);
-        $statement->execute();
-        $userData = $statement->fetch(PDO::FETCH_ASSOC);
+        try {
+            $statement = $this->connection->prepare('select * from users where email = :email');
+            $statement->bindValue(':email', $email, PDO::PARAM_STR);
+            $statement->execute();
+            $userData = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($userData === false) {
-            return false;
+            if ($userData === false) { // FAZER TESTE COM EMAIL INEXISTENTE
+                throw new \DomainException('Usuário inválido!');
+            }
+            return $this->hydrateUser($userData);
+        } catch (\PDOException | \DomainException $exception) {
+            $_SESSION['mensagem'] = $exception->getMessage();
+
+            if (is_a($exception, \PDOException::class)) {
+                $_SESSION['mensagem'] = 'Houve um problema ao tentar logar-se, contate o suporte';
+                header('Location: /login');
+                return;
+            }
+            header('Location: /login');
         }
-        return $this->hydrateUser($userData);
     }
 
     private function hydrateUser(array $userData): User

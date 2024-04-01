@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/errorHandler.php';
 
 use ProjetoBlog\Infrastructure\Persistence\ConnectionCreator;
 use ProjetoBlog\Repository\PostRepository;
 use ProjetoBlog\Repository\UserRepository;
 
-$pdo = ConnectionCreator::createconnection();
+ini_set('error_log', __DIR__ . '/../storage/logs/php_error_log');
+
+$pdo = ConnectionCreator::createconnection(); // configurar para pdo devolver exceção e não false - ver sobre isso nos cursos do pq e onde o pdo exception faz isso
 $postRepository = new PostRepository($pdo);
 $userRepository = new UserRepository($pdo);
 
@@ -21,8 +24,12 @@ $httpRoute = "$httpMethod|$pathInfo";
 $isLoginRoute = $pathInfo === '/login';
 $newUserRoute = $pathInfo === '/novo-usuario';
 
-if (!array_key_exists('logado', $_SESSION) && !$isLoginRoute && !$newUserRoute) {
-    $_SESSION['mensagem'] = 'TEM QUE TA LOGADO KRAI';
+try {
+    if (!array_key_exists('logado', $_SESSION) && !$isLoginRoute && !$newUserRoute) {
+        throw new DomainException('TEM QUE TA LOGADO KRAI');
+    }
+} catch (DomainException $exception) {
+    $_SESSION['mensagem'] = $exception->getMessage();
     header('Location: /login');
     return;
 }
@@ -34,7 +41,7 @@ if (isset($_SESSION['logado'])) {
     $_SESSION['logado'] = $originalInfo;
 }
 
-if (array_key_exists($httpRoute, $routes)) {
+if (array_key_exists($httpRoute, $routes)) { //exceção aqui
     $controllerClass = $routes[$httpRoute];
     if (stristr($controllerClass, 'login') || stristr($controllerClass, 'User') ) {
         $controller = new $controllerClass($userRepository);

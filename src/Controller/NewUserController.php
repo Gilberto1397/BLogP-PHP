@@ -15,32 +15,36 @@ class NewUserController implements Controller
     }
 
 
+    /**
+     * @return void
+     * @throws \InvalidArgumentException | \DomainException
+     */
     public function processRequest(): void
     {
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        if ($email === false) {
-            die(123);
-            header('Location: /?sucesso=0');
-            return;
-        }
-        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-        if ($password === false) {
-            die('abc');
-            header('Location: /?sucesso=0');
-            return;
-        }
+        try {
+            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            if ($email === false) {
+                throw new \InvalidArgumentException('Email fornecido inválido.');
+            }
 
-        $user = new User($email, password_hash($password, PASSWORD_ARGON2ID));
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            if (empty($password)) {
+                throw new \InvalidArgumentException('Senha fornecida inválida');
+            }
 
-        $success = $this->userRepository->add($user);
+            $user = new User($email, password_hash($password, PASSWORD_ARGON2ID));
+            $success = $this->userRepository->add($user);
 
-        if ($success === false) {
-            $_SESSION['mensagem'] = 'Falha ao criar usuário';
+            if ($success === false) { // APÓS RECONFIGURAR PDO PRA LANÇAR EXCEÇÃO REVER ESSE IF
+                throw new \DomainException('Falha ao criar novo usuário.');
+            } else {
+                $_SESSION['mensagem'] = 'Usuário criado com sucesso';
+                header('Location: /login');
+            }
+
+        } catch (\InvalidArgumentException|\DomainException $exception) {
+            $_SESSION['mensagem'] = $exception->getMessage();
             header('Location: /novo-usuario');
-        } else {
-            $_SESSION['mensagem'] = 'Usuário criado com sucesso';
-            header('Location: /login');
-            //header('Location: /');
         }
     }
 }
