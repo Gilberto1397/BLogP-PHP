@@ -17,7 +17,7 @@ class PostFormController implements Controller
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $post = null;
 
-        if ($id !== false && $id !== null) {
+        if (!empty($id)) {
             $post = $this->postRepository->find($id);
         }
         require_once __DIR__ . '/../../views/form-post.php';

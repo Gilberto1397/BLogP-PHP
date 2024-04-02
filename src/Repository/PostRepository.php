@@ -16,17 +16,23 @@ class PostRepository
 
     public function add(Post $post): bool
     {
-        $sql = 'insert into posts (title, content, image_path) values (:title, :content, :imagePath)';
-        $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(':title', $post->getTitle(), PDO::PARAM_STR);
-        $statement->bindValue(':content', $post->getContent(), PDO::PARAM_STR);
-        $statement->bindValue(':imagePath', $post->getImagePath(), PDO::PARAM_STR);
+        try {
+            $sql = 'insert into posts (title, content, image_path) values (:title, :content, :imagePath);';
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':title', $post->getTitle(), PDO::PARAM_STR);
+            $statement->bindValue(':content', $post->getContent(), PDO::PARAM_STR);
+            $statement->bindValue(':imagePath', $post->getImagePath(), PDO::PARAM_STR);
 
-        $result = $statement->execute();
-        $id = $this->pdo->lastInsertId();
+            $result = $statement->execute();
+            $id = $this->pdo->lastInsertId();
 
-        $post->setId((int)$id);
-        return $result;
+            $post->setId((int)$id);
+            return $result;
+        } catch (\PDOException $exception) {
+            $_SESSION['mensagem'] = 'Falha ao salvar post.';
+            header('Location: /novo-post');
+            die();
+        }
     }
 
     public function update(Post $post): bool
