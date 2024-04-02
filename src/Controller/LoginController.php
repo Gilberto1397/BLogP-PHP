@@ -17,14 +17,14 @@ class LoginController implements Controller
 
     /**
      * @return void
-     * @throws \DomainException
+     * @throws \DomainException | \InvalidArgumentException
      */
     public function processRequest(): void
     {
         try {
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             if ($email === false) {
-                throw new \InvalidArgumentException('Email fornecido inválido.');
+                throw new \InvalidArgumentException('Dados de login inválidos.');
             }
 
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -35,15 +35,15 @@ class LoginController implements Controller
             $correctPassword = password_verify($password, $userData instanceof User ? $userData->getPassword() : '');
 
             if (!$correctPassword) {
-                new DomainException('DADOS ERRADOS PORRAAAA!');
+               throw new \DomainException('Dados de login inválidos.');
             }
 
-            if (password_needs_rehash($userData->getPassword(), PASSWORD_ARGON2ID)) {
-                $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?'); //????? - rever annotation de exceção ao arrumar isso
-                $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
-                $statement->bindValue(2, $userData['id']);
-                $statement->execute();
-            }
+//            if (password_needs_rehash($userData->getPassword(), PASSWORD_ARGON2ID)) {
+//                $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?'); //????? - rever annotation de exceção ao arrumar isso
+//                $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
+//                $statement->bindValue(2, $userData['id']);
+//                $statement->execute();
+//            }
             $_SESSION['logado'] = true;
 
             if ($lembrar) {
@@ -54,7 +54,7 @@ class LoginController implements Controller
 
             header('Location: /');
 
-        } catch (\DomainException $exception) {
+        } catch (\DomainException | \InvalidArgumentException $exception) {
             $_SESSION['mensagem'] = $exception->getMessage();
             header('Location: /login');
         }

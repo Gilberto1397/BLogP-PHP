@@ -31,15 +31,16 @@ class UserRepository
             $id = $this->connection->lastInsertId();
 
             $user->setId((int)$id);
+            return $result;
+
         } catch (\PDOException $exception) {
             $_SESSION['mensagem'] = 'Falha ao salvar novo usuário no banco de dados.';
             header('Location: /novo-usuario');
         }
-        return $result;
     }
 
     /**
-     * @param  string  $email
+     * @param string $email
      * @return User
      * @throws \PDOException | \DomainException
      */
@@ -51,19 +52,19 @@ class UserRepository
             $statement->execute();
             $userData = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if ($userData === false) { // FAZER TESTE COM EMAIL INEXISTENTE
-                throw new \DomainException('Usuário inválido!');
+            if ($userData === false) {
+                throw new \DomainException('Dados de login inválidos');
             }
             return $this->hydrateUser($userData);
+
         } catch (\PDOException | \DomainException $exception) {
             $_SESSION['mensagem'] = $exception->getMessage();
 
             if (is_a($exception, \PDOException::class)) {
                 $_SESSION['mensagem'] = 'Houve um problema ao tentar logar-se, contate o suporte';
-                header('Location: /login');
-                return;
             }
             header('Location: /login');
+            exit();
         }
     }
 
