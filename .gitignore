@@ -2,3 +2,4 @@
 **/.idea/
 **/uploads/
 *.sqlite
+storage/logs/php_error_log
