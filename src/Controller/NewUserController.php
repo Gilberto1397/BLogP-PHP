@@ -33,15 +33,10 @@ class NewUserController implements Controller
             }
 
             $user = new User($email, password_hash($password, PASSWORD_ARGON2ID));
-            $success = $this->userRepository->add($user);
+            $this->userRepository->add($user);
 
-            if ($success === false) { // APÓS RECONFIGURAR PDO PRA LANÇAR EXCEÇÃO REVER ESSE IF
-                throw new \DomainException('Falha ao criar novo usuário.');
-            } else {
-                $_SESSION['mensagem'] = 'Usuário criado com sucesso';
-                header('Location: /login');
-            }
-
+            $_SESSION['mensagem'] = 'Usuário criado com sucesso';
+            header('Location: /login');
         } catch (\InvalidArgumentException|\DomainException $exception) {
             $_SESSION['mensagem'] = $exception->getMessage();
             header('Location: /novo-usuario');

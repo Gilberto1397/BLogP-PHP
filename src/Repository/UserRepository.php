@@ -15,11 +15,11 @@ class UserRepository
     }
 
     /**
-     * @param  User $user
-     * @return bool
+     * @param  User  $user
+     * @return void
      * @throws \PDOException
      */
-    public function add(User $user): bool
+    public function add(User $user): void
     {
         try {
             $sql = 'insert into users (email, password) values (:email, :password)';
@@ -31,16 +31,16 @@ class UserRepository
             $id = $this->connection->lastInsertId();
 
             $user->setId((int)$id);
-            return $result;
-
+            return;
         } catch (\PDOException $exception) {
             $_SESSION['mensagem'] = 'Falha ao salvar novo usuário no banco de dados.';
             header('Location: /novo-usuario');
+            die();
         }
     }
 
     /**
-     * @param string $email
+     * @param  string  $email
      * @return User
      * @throws \PDOException | \DomainException
      */
@@ -56,15 +56,14 @@ class UserRepository
                 throw new \DomainException('Dados de login inválidos');
             }
             return $this->hydrateUser($userData);
-
-        } catch (\PDOException | \DomainException $exception) {
+        } catch (\PDOException|\DomainException $exception) {
             $_SESSION['mensagem'] = $exception->getMessage();
 
             if (is_a($exception, \PDOException::class)) {
                 $_SESSION['mensagem'] = 'Houve um problema ao tentar logar-se, contate o suporte';
             }
             header('Location: /login');
-            exit();
+            die();
         }
     }
 

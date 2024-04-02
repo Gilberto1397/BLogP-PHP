@@ -9,9 +9,10 @@ class ConnectionCreator
     const options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ];
-    public static function createconnection(): PDO
+
+    public static function createConnection(): PDO
     {
-        $dbPath = __DIR__ . '/../../../baseDados.sqlite';
+        $dbPath = __DIR__.'/../../../baseDados.sqlite';
         return new PDO("sqlite:$dbPath", null, null, self::options);
     }
 }
