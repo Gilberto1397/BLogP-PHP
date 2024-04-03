@@ -35,6 +35,3 @@ TODO: DESAFIO - SALVAR O NOME DO ARQUIVO DE UPLOAD COMO UM SLUG
 
 >>>>Tentar usar post para o delete
 
---------------------------------------------------
-
-PROCURAR POR return $statement->execute();
