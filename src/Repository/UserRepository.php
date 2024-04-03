@@ -27,7 +27,7 @@ class UserRepository
             $statement->bindValue(':email', $user->getEmail());
             $statement->bindValue(':password', $user->getPassword());
 
-            $result = $statement->execute();
+            $statement->execute();
             $id = $this->connection->lastInsertId();
 
             $user->setId((int)$id);

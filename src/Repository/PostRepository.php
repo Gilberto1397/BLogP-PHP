@@ -23,11 +23,10 @@ class PostRepository
             $statement->bindValue(':content', $post->getContent(), PDO::PARAM_STR);
             $statement->bindValue(':imagePath', $post->getImagePath(), PDO::PARAM_STR);
 
-            $result = $statement->execute();
+            $statement->execute();
             $id = $this->pdo->lastInsertId();
 
             $post->setId((int)$id);
-            return $result;
         } catch (\PDOException $exception) {
             $_SESSION['mensagem'] = 'Falha ao salvar post.';
             header('Location: /novo-post');
@@ -52,11 +51,10 @@ class PostRepository
             if ($post->getImagePath() !== null) {
                 $statement->bindValue(':image_path', $post->getImagePath());
             }
-            $result = $statement->execute();
+            $statement->execute();
             $id = $this->pdo->lastInsertId();
 
             $post->setId((int)$id);
-            return $result;
         } catch (\PDOException $exception) {
             $_SESSION['mensagem'] = 'Falha ao atualizar post.';
             header('Location: /novo-post');

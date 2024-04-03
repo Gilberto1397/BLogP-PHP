@@ -22,7 +22,7 @@ class NewUserController implements Controller
     public function processRequest(): void
     {
         try {
-            $sanitizedEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL); //todo aplicar sanitize também com 2 variaveis
+            $sanitizedEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $email = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
 
             if ($email === false) {
