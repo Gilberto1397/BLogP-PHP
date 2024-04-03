@@ -22,8 +22,10 @@ class LoginController implements Controller
     public function processRequest(): void
     {
         try {
-            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-            if ($email === false) {
+            $sanitizedEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+            $email = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
+
+            if (empty($email)) {
                 throw new \InvalidArgumentException('Dados de login inválidos.');
             }
 

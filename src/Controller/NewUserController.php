@@ -25,7 +25,7 @@ class NewUserController implements Controller
             $sanitizedEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $email = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
 
-            if ($email === false) {
+            if (empty($email)) {
                 throw new \InvalidArgumentException('Email fornecido inválido.');
             }
 
