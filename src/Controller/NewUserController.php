@@ -22,7 +22,9 @@ class NewUserController implements Controller
     public function processRequest(): void
     {
         try {
-            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            $sanitizedEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL); //todo aplicar sanitize também com 2 variaveis
+            $email = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
+
             if ($email === false) {
                 throw new \InvalidArgumentException('Email fornecido inválido.');
             }

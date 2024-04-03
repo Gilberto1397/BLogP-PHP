@@ -64,20 +64,38 @@ class PostRepository
         }
     }
 
-    public function remove(int $id):bool
+    public function remove(int $id)
     {
-        $post = $this->find($id);
-        $postImage = $post->getImagePath();
-        if ($postImage !== null) {
-            $deleteImage = "img/uploads/" . $postImage;
-            unlink($deleteImage);
+        try {
+            $post = $this->find($id);
+            $postImage = $post->getImagePath();
+
+            $sql = 'delete from posts where id = :id;';
+            $this->pdo->beginTransaction();
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+
+            if ($postImage !== null) {
+                $deleteImage = "img/uploads/" . $postImage;
+                $removedImage = unlink($deleteImage);
+
+                if (!$removedImage) {
+                    throw new \DomainException('Erro ao apagar imagem de post.');
+                }
+            }
+
+            $this->pdo->commit();
+        } catch (\PDOException | \DomainException $exception) {
+            $this->pdo->rollBack();
+            $_SESSION['mensagem'] = 'Erro ao apagar post';
+
+            if (is_a($exception, \DomainException::class)) {
+                $_SESSION['mensagem'] = $exception->getMessage();
+            }
+            header('Location: /');
+            die();
         }
-
-        $sql = 'delete from posts where id = :id;';
-        $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-
-        return $statement->execute();
     }
     
     public function all(): array

@@ -13,23 +13,21 @@ class DeletePostController implements Controller
     }
     public function processRequest(): void
     {
-        $id = filter_input(INPUT_GET, 'id');
+        try {
+            $sanitizedId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+            $id = filter_var($sanitizedId, FILTER_VALIDATE_INT);
 
-        if ($id === false) {
-            die(123);
-            header('Location: /?sucesso=0');
-            return;
-        }
+            if (empty($id)) {
+                throw new \InvalidArgumentException('Código de post inválido para apagar post.');
+            }
 
-        $success = $this->postRepository->remove($id);
+            $this->postRepository->remove($id);
 
-        if ($success === false) {
-            $_SESSION['mensagem'] = 'Falha ao deletar post';
-            header('Location: /');
-        } else {
             $_SESSION['mensagem'] = 'Post deletado com sucesso!';
             header('Location: /');
-            //header('Location: /');
+        } catch (\InvalidArgumentException $exception) {
+            $_SESSION['mensagem'] = $exception->getMessage();
+            header('Location: /');
         }
     }
 }
