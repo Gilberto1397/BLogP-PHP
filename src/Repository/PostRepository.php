@@ -37,25 +37,31 @@ class PostRepository
 
     public function update(Post $post): bool
     {
-        $updateImageSql = '';
+        try {
+            $updateImageSql = '';
 
-        if ($post->getImagePath() !== null) {
-            $updateImageSql = ', image_path = :image_path';
+            if (!empty($post->getImagePath())) {
+                $updateImageSql = ', image_path = :image_path';
+            }
+            $sql = "update posts set title = :title, content = :content $updateImageSql where id = :id;";
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':title', $post->getTitle(), PDO::PARAM_STR);
+            $statement->bindValue(':content', $post->getContent(), PDO::PARAM_STR);
+            $statement->bindValue(':id', $post->getId(), PDO::PARAM_INT);
+
+            if ($post->getImagePath() !== null) {
+                $statement->bindValue(':image_path', $post->getImagePath());
+            }
+            $result = $statement->execute();
+            $id = $this->pdo->lastInsertId();
+
+            $post->setId((int)$id);
+            return $result;
+        } catch (\PDOException $exception) {
+            $_SESSION['mensagem'] = 'Falha ao atualizar post.';
+            header('Location: /novo-post');
+            die();
         }
-        $sql = "update posts set title = :title, content = :content $updateImageSql where id = :id;";
-        $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(':title', $post->getTitle(), PDO::PARAM_STR);
-        $statement->bindValue(':content', $post->getContent(), PDO::PARAM_STR);
-        $statement->bindValue(':id', $post->getId(), PDO::PARAM_INT);
-
-        if ($post->getImagePath() !== null) {
-            $statement->bindValue(':image_path', $post->getImagePath());
-        }
-        $result = $statement->execute();
-        $id = $this->pdo->lastInsertId();
-
-        $post->setId((int)$id);
-        return $result;
     }
 
     public function remove(int $id):bool
@@ -85,11 +91,17 @@ class PostRepository
 
     public function find(int $id): Post
     {
-        $statement = $this->pdo->prepare('select * from posts where id = :id');
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
+        try {
+            $statement = $this->pdo->prepare('select * from posts where id = :id');
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
 
-        return $this->hydratePost($statement->fetch(PDO::FETCH_ASSOC));
+            return $this->hydratePost($statement->fetch(PDO::FETCH_ASSOC));
+        } catch (\PDOException $exception) {
+            $_SESSION['mensagem'] = 'Houve um erro para recuperar o dono desse post.';
+            header('Location: /');
+            die();
+        }
     }
 
     private function hydratePost(array $postData): Post

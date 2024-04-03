@@ -14,11 +14,13 @@ class PostFormController implements Controller
 
     public function processRequest(): void
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $sanitizedId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $id = filter_var($sanitizedId, FILTER_VALIDATE_INT);
         $post = null;
 
         if (!empty($id)) {
             $post = $this->postRepository->find($id);
+            $_SESSION['postId'] = $post->getId();
         }
         require_once __DIR__ . '/../../views/form-post.php';
     }
