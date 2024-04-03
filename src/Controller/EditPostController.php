@@ -41,10 +41,10 @@ class EditPostController implements Controller
                     __DIR__.'/../../public/img/uploads/'.$_FILES['image']['name']
                 );
                 $post->setImagePath($_FILES['image']['name']);
-            }
 
-            if (!$movedImage) {
-                throw new \DomainException('Erro ao atualizar imagem do post.');
+                if (!$movedImage) {
+                    throw new \DomainException('Erro ao atualizar imagem do post.');
+                }
             }
 
             $this->postRepository->update($post);

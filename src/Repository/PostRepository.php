@@ -98,11 +98,17 @@ class PostRepository
     
     public function all(): array
     {
-        $postList = $this->pdo->query('select * from posts;')->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(
-            [static::class, 'hydratePost'],
-            $postList
-        );
+        try {
+            $postList = $this->pdo->query('select * from posts;')->fetchAll(PDO::FETCH_ASSOC);
+            return array_map(
+                [static::class, 'hydratePost'],
+                $postList
+            );
+        } catch (\PDOException $exception) {
+            $_SESSION['mensagem'] = 'Erro ao recuperar posts';
+            header('Location: /login');
+            die();
+        }
     }
 
     public function find(int $id): Post

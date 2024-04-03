@@ -8,7 +8,7 @@ use ProjetoBlog\Repository\UserRepository;
 
 ini_set('error_log', __DIR__ . '/../storage/logs/php_error_log');
 
-$pdo = ConnectionCreator::createConnection(); // configurar para pdo devolver exceção e não false - ver sobre isso nos cursos do pq e onde o pdo exception faz isso
+$pdo = ConnectionCreator::createConnection();
 $postRepository = new PostRepository($pdo);
 $userRepository = new UserRepository($pdo);
 
